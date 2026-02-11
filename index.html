@@ -5,112 +5,95 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hammer</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#111827">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Inter',sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
 
 body{
-background:linear-gradient(160deg,#111827,#1f2937,#0f172a);
+background:linear-gradient(160deg,#0f172a,#1e293b);
 min-height:100vh;
 display:flex;
 justify-content:center;
-align-items:flex-start;
 padding:20px;
-color:#fff;
+color:white;
 }
 
 .app{
 width:100%;
 max-width:420px;
-background:#0f172a;
+background:#111827;
 border-radius:28px;
 padding:22px;
-box-shadow:0 20px 60px rgba(0,0,0,0.6);
+box-shadow:0 25px 60px rgba(0,0,0,0.6);
 }
 
 .header{
 font-size:24px;
 font-weight:700;
-margin-bottom:4px;
+margin-bottom:5px;
 }
 
 .sub{
 font-size:13px;
 opacity:0.6;
-margin-bottom:24px;
+margin-bottom:20px;
 cursor:pointer;
 }
 
 .section{
-background:#1e293b;
+background:#1f2937;
 padding:18px;
-border-radius:20px;
+border-radius:18px;
 margin-bottom:18px;
 }
 
 .section h3{
 font-size:15px;
 margin-bottom:10px;
-font-weight:600;
-}
-
-.guide{
-font-size:13px;
-line-height:1.7;
-opacity:0.8;
-}
-
-input[type="file"]{
-width:100%;
-margin-top:12px;
 }
 
 button{
 width:100%;
-margin-top:14px;
 padding:12px;
+margin-top:10px;
 border:none;
-border-radius:14px;
+border-radius:12px;
 background:#2563eb;
 color:white;
 font-weight:600;
 cursor:pointer;
-transition:0.2s;
 }
 
-button:active{
-transform:scale(0.97);
-}
+button:active{transform:scale(0.97);}
 
-.statusBox{
-text-align:center;
+.statusText{
 font-size:18px;
 font-weight:600;
-margin-top:6px;
 }
 
 .statusDesc{
 font-size:13px;
 opacity:0.7;
-margin-top:4px;
+margin-top:5px;
+}
+
+.hidden{display:none;}
+
+.admin{
+background:#0f172a;
+padding:15px;
+border-radius:16px;
+margin-top:10px;
 }
 
 .scan{
-margin-top:10px;
 height:4px;
 width:100%;
 background:#334155;
 border-radius:5px;
 overflow:hidden;
+margin-top:8px;
 }
 
 .scan::after{
@@ -126,29 +109,6 @@ animation:move 1.2s linear infinite;
 0%{transform:translateX(-100%);}
 100%{transform:translateX(250%);}
 }
-
-.hidden{
-display:none;
-}
-
-.admin{
-background:#111827;
-padding:15px;
-border-radius:18px;
-margin-top:10px;
-}
-
-.admin button{
-background:#334155;
-margin-top:8px;
-}
-
-.footer{
-text-align:center;
-font-size:12px;
-opacity:0.4;
-margin-top:12px;
-}
 </style>
 </head>
 
@@ -159,90 +119,160 @@ margin-top:12px;
 <div class="header">Hammer</div>
 <div class="sub" onclick="toggleAdmin()">Supervisor: Zunaid</div>
 
+<!-- PHOTO SECTION -->
 <div class="section">
+<h3>Upload Photo</h3>
+<input type="file" id="photoUpload" accept="image/*">
+<button onclick="startPhotoReview()">Submit Photo</button>
+<div id="photoScan" class="scan hidden"></div>
+</div>
+
+<!-- PHOTO STATUS -->
+<div class="section">
+<h3>Photo Status</h3>
+<div id="photoStatus" class="statusText">Pending</div>
+<div id="photoDesc" class="statusDesc">Awaiting photo submission</div>
+</div>
+
+<!-- VIDEO SECTION -->
+<div id="videoSection" class="section hidden">
 <h3>Video Guidelines</h3>
-<div class="guide">
-✔ Use proper lighting<br>
-✔ Keep camera steady<br>
-✔ Face fully visible<br>
-✔ 5–15 seconds duration
-</div>
+<div class="statusDesc">
+✔ Proper lighting<br>
+✔ Stable camera<br>
+✔ Face visible<br>
+✔ Duration must be between 5–15 minutes
 </div>
 
-<div class="section">
-<h3>Upload Verification Video</h3>
 <input type="file" id="videoUpload" accept="video/*">
-<button onclick="startScan()">Start Verification</button>
-
-<div id="scanBar" class="scan hidden"></div>
+<button onclick="startVideoReview()">Submit Video</button>
+<div id="videoScan" class="scan hidden"></div>
 </div>
 
-<div class="section">
-<h3>Status</h3>
-<div id="statusText" class="statusBox">Host pending</div>
-<div id="statusDesc" class="statusDesc">Waiting for submission</div>
+<!-- VIDEO STATUS -->
+<div id="videoStatusSection" class="section hidden">
+<h3>Video Status</h3>
+<div id="videoStatus" class="statusText">Pending</div>
+<div id="videoDesc" class="statusDesc">Awaiting video submission</div>
 </div>
 
+<!-- ADMIN -->
 <div id="adminPanel" class="admin hidden">
-<button onclick="setStatus('pass')">Approve</button>
-<button onclick="setStatus('pending')">Set Pending</button>
-<button onclick="setStatus('fail')">Reject</button>
-</div>
+<h3>Admin Control</h3>
+<button onclick="setPhotoStatus('pass')">Photo Approve</button>
+<button onclick="setPhotoStatus('fail')">Photo Reject</button>
+<button onclick="setPhotoStatus('pending')">Photo Pending</button>
 
-<div class="footer">
-Hammer Secure System v5.0
+<br><br>
+
+<button onclick="setVideoStatus('pass')">Video Approve</button>
+<button onclick="setVideoStatus('fail')">Video Reject</button>
+<button onclick="setVideoStatus('pending')">Video Pending</button>
 </div>
 
 </div>
 
 <script>
-let status="pending";
+let photoStatus="pending";
+let videoStatus="pending";
 
-function startScan(){
+/* PHOTO REVIEW */
+function startPhotoReview(){
+const file=document.getElementById("photoUpload").files[0];
+if(!file){alert("Select photo first");return;}
+
+document.getElementById("photoScan").classList.remove("hidden");
+
+setTimeout(()=>{
+document.getElementById("photoScan").classList.add("hidden");
+photoStatus="pending";
+updatePhotoStatus();
+},2000);
+}
+
+/* VIDEO REVIEW WITH 5–15 MIN VALIDATION */
+function startVideoReview(){
 const file=document.getElementById("videoUpload").files[0];
-if(!file){
-alert("Please select a video first.");
+if(!file){alert("Select video first");return;}
+
+const video=document.createElement("video");
+video.preload="metadata";
+
+video.onloadedmetadata=function(){
+window.URL.revokeObjectURL(video.src);
+const duration = video.duration / 60; // convert to minutes
+
+if(duration < 5 || duration > 15){
+alert("Video must be between 5 and 15 minutes long.");
 return;
 }
 
-document.getElementById("scanBar").classList.remove("hidden");
-status="pending";
-updateStatus();
+document.getElementById("videoScan").classList.remove("hidden");
 
 setTimeout(()=>{
-document.getElementById("scanBar").classList.add("hidden");
-},3000);
+document.getElementById("videoScan").classList.add("hidden");
+videoStatus="pending";
+updateVideoStatus();
+},2000);
+};
+
+video.src = URL.createObjectURL(file);
 }
 
-function setStatus(newStatus){
-status=newStatus;
-updateStatus();
+/* ADMIN CONTROL */
+function setPhotoStatus(status){
+photoStatus=status;
+updatePhotoStatus();
 }
 
-function updateStatus(){
-const text=document.getElementById("statusText");
-const desc=document.getElementById("statusDesc");
+function setVideoStatus(status){
+videoStatus=status;
+updateVideoStatus();
+}
 
-if(status==="pass"){
+/* UPDATE UI */
+function updatePhotoStatus(){
+const text=document.getElementById("photoStatus");
+const desc=document.getElementById("photoDesc");
+
+if(photoStatus==="pass"){
+text.innerText="Photo Approved";
+desc.innerText="Photo meets standards.";
+document.getElementById("videoSection").classList.remove("hidden");
+document.getElementById("videoStatusSection").classList.remove("hidden");
+}
+else if(photoStatus==="fail"){
+text.innerText="Photo Rejected";
+desc.innerText="Photo quality insufficient.";
+document.getElementById("videoSection").classList.add("hidden");
+document.getElementById("videoStatusSection").classList.add("hidden");
+}
+else{
+text.innerText="Photo Pending";
+desc.innerText="Photo under review.";
+}
+}
+
+function updateVideoStatus(){
+const text=document.getElementById("videoStatus");
+const desc=document.getElementById("videoDesc");
+
+if(videoStatus==="pass"){
 text.innerText="Video Approved";
-desc.innerText="Video meets required standards.";
+desc.innerText="Video verified successfully.";
 }
-else if(status==="fail"){
+else if(videoStatus==="fail"){
 text.innerText="Video Rejected";
 desc.innerText="Lighting or clarity insufficient.";
 }
 else{
-text.innerText="Under Review";
-desc.innerText="Video under internal review.";
+text.innerText="Video Pending";
+desc.innerText="Video under review.";
 }
 }
 
 function toggleAdmin(){
 document.getElementById("adminPanel").classList.toggle("hidden");
-}
-
-if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("sw.js");
 }
 </script>
 
