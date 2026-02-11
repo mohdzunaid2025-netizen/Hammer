@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hammer</title>
+<title>Hammer Internal Verification System</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
@@ -21,7 +21,7 @@ color:white;
 
 .app{
 width:100%;
-max-width:420px;
+max-width:440px;
 background:#111827;
 border-radius:28px;
 padding:22px;
@@ -29,15 +29,15 @@ box-shadow:0 25px 60px rgba(0,0,0,0.6);
 }
 
 .header{
-font-size:24px;
+font-size:22px;
 font-weight:700;
-margin-bottom:5px;
+margin-bottom:4px;
 }
 
 .sub{
-font-size:13px;
+font-size:12px;
 opacity:0.6;
-margin-bottom:20px;
+margin-bottom:18px;
 cursor:pointer;
 }
 
@@ -45,12 +45,18 @@ cursor:pointer;
 background:#1f2937;
 padding:18px;
 border-radius:18px;
-margin-bottom:18px;
+margin-bottom:16px;
 }
 
 .section h3{
 font-size:15px;
 margin-bottom:10px;
+}
+
+.section p{
+font-size:13px;
+opacity:0.8;
+line-height:1.6;
 }
 
 button{
@@ -65,25 +71,30 @@ font-weight:600;
 cursor:pointer;
 }
 
-button:active{transform:scale(0.97);}
+.statusTitle{
+font-size:14px;
+font-weight:600;
+margin-bottom:6px;
+}
 
 .statusText{
-font-size:18px;
+font-size:16px;
 font-weight:600;
 }
 
 .statusDesc{
 font-size:13px;
 opacity:0.7;
-margin-top:5px;
+margin-top:4px;
+line-height:1.5;
 }
 
 .hidden{display:none;}
 
 .admin{
 background:#0f172a;
-padding:15px;
-border-radius:16px;
+padding:14px;
+border-radius:14px;
 margin-top:10px;
 }
 
@@ -109,6 +120,13 @@ animation:move 1.2s linear infinite;
 0%{transform:translateX(-100%);}
 100%{transform:translateX(250%);}
 }
+
+.footer{
+text-align:center;
+font-size:11px;
+opacity:0.4;
+margin-top:12px;
+}
 </style>
 </head>
 
@@ -116,58 +134,82 @@ animation:move 1.2s linear infinite;
 
 <div class="app">
 
-<div class="header">Hammer</div>
-<div class="sub" onclick="toggleAdmin()">Supervisor: Zunaid</div>
+<div class="header">Hammer Internal Verification System</div>
+<div class="sub" onclick="toggleAdmin()">Supervisor Access: Zunaid</div>
+
+<div class="section">
+<h3>System Overview</h3>
+<p>
+This platform performs a structured two-step verification process 
+consisting of a preliminary visual image review followed by an extended 
+video-based compliance assessment. Each submission is manually reviewed 
+through the internal moderation panel.
+</p>
+</div>
 
 <!-- PHOTO SECTION -->
 <div class="section">
-<h3>Upload Photo</h3>
+<h3>Step 1: Photo Verification</h3>
+<p>
+Upload a clear front-facing image. Ensure adequate lighting, 
+no facial obstruction, and neutral background conditions.
+</p>
+
 <input type="file" id="photoUpload" accept="image/*">
-<button onclick="startPhotoReview()">Submit Photo</button>
+<button onclick="startPhotoReview()">Submit Photo for Review</button>
 <div id="photoScan" class="scan hidden"></div>
 </div>
 
-<!-- PHOTO STATUS -->
 <div class="section">
-<h3>Photo Status</h3>
-<div id="photoStatus" class="statusText">Pending</div>
-<div id="photoDesc" class="statusDesc">Awaiting photo submission</div>
+<div class="statusTitle">Photo Review Status</div>
+<div id="photoStatus" class="statusText">Awaiting Submission</div>
+<div id="photoDesc" class="statusDesc">
+No image has been reviewed yet.
+</div>
 </div>
 
 <!-- VIDEO SECTION -->
 <div id="videoSection" class="section hidden">
-<h3>Video Guidelines</h3>
-<div class="statusDesc">
-✔ Proper lighting<br>
-✔ Stable camera<br>
-✔ Face visible<br>
-✔ Duration must be between 5–15 minutes
-</div>
+<h3>Step 2: Extended Video Verification</h3>
+<p>
+After photo approval, submit a continuous video recording between 
+<strong>5 and 15 minutes</strong>. Ensure stable camera positioning, 
+consistent lighting, and uninterrupted capture.
+</p>
 
 <input type="file" id="videoUpload" accept="video/*">
-<button onclick="startVideoReview()">Submit Video</button>
+<button onclick="startVideoReview()">Submit Video for Evaluation</button>
 <div id="videoScan" class="scan hidden"></div>
 </div>
 
-<!-- VIDEO STATUS -->
 <div id="videoStatusSection" class="section hidden">
-<h3>Video Status</h3>
-<div id="videoStatus" class="statusText">Pending</div>
-<div id="videoDesc" class="statusDesc">Awaiting video submission</div>
+<div class="statusTitle">Video Review Status</div>
+<div id="videoStatus" class="statusText">Awaiting Submission</div>
+<div id="videoDesc" class="statusDesc">
+Video verification not yet initiated.
+</div>
 </div>
 
 <!-- ADMIN -->
 <div id="adminPanel" class="admin hidden">
-<h3>Admin Control</h3>
-<button onclick="setPhotoStatus('pass')">Photo Approve</button>
-<button onclick="setPhotoStatus('fail')">Photo Reject</button>
+<h3>Internal Moderation Panel</h3>
+<p style="font-size:12px;opacity:0.6;margin-bottom:8px;">
+Supervisor controlled status override.
+</p>
+
+<button onclick="setPhotoStatus('pass')">Approve Photo</button>
+<button onclick="setPhotoStatus('fail')">Reject Photo</button>
 <button onclick="setPhotoStatus('pending')">Photo Pending</button>
 
 <br><br>
 
-<button onclick="setVideoStatus('pass')">Video Approve</button>
-<button onclick="setVideoStatus('fail')">Video Reject</button>
+<button onclick="setVideoStatus('pass')">Approve Video</button>
+<button onclick="setVideoStatus('fail')">Reject Video</button>
 <button onclick="setVideoStatus('pending')">Video Pending</button>
+</div>
+
+<div class="footer">
+Hammer Verification Engine v6.2 – Internal Use Only
 </div>
 
 </div>
@@ -176,10 +218,9 @@ animation:move 1.2s linear infinite;
 let photoStatus="pending";
 let videoStatus="pending";
 
-/* PHOTO REVIEW */
 function startPhotoReview(){
 const file=document.getElementById("photoUpload").files[0];
-if(!file){alert("Select photo first");return;}
+if(!file){alert("Please select a photo.");return;}
 
 document.getElementById("photoScan").classList.remove("hidden");
 
@@ -190,20 +231,19 @@ updatePhotoStatus();
 },2000);
 }
 
-/* VIDEO REVIEW WITH 5–15 MIN VALIDATION */
 function startVideoReview(){
 const file=document.getElementById("videoUpload").files[0];
-if(!file){alert("Select video first");return;}
+if(!file){alert("Please select a video.");return;}
 
 const video=document.createElement("video");
 video.preload="metadata";
 
 video.onloadedmetadata=function(){
 window.URL.revokeObjectURL(video.src);
-const duration = video.duration / 60; // convert to minutes
+const duration = video.duration / 60;
 
 if(duration < 5 || duration > 15){
-alert("Video must be between 5 and 15 minutes long.");
+alert("Video duration must be between 5 and 15 minutes.");
 return;
 }
 
@@ -219,7 +259,6 @@ updateVideoStatus();
 video.src = URL.createObjectURL(file);
 }
 
-/* ADMIN CONTROL */
 function setPhotoStatus(status){
 photoStatus=status;
 updatePhotoStatus();
@@ -230,26 +269,23 @@ videoStatus=status;
 updateVideoStatus();
 }
 
-/* UPDATE UI */
 function updatePhotoStatus(){
 const text=document.getElementById("photoStatus");
 const desc=document.getElementById("photoDesc");
 
 if(photoStatus==="pass"){
 text.innerText="Photo Approved";
-desc.innerText="Photo meets standards.";
+desc.innerText="Image meets internal verification standards.";
 document.getElementById("videoSection").classList.remove("hidden");
 document.getElementById("videoStatusSection").classList.remove("hidden");
 }
 else if(photoStatus==="fail"){
 text.innerText="Photo Rejected";
-desc.innerText="Photo quality insufficient.";
-document.getElementById("videoSection").classList.add("hidden");
-document.getElementById("videoStatusSection").classList.add("hidden");
+desc.innerText="Image quality or clarity insufficient.";
 }
 else{
-text.innerText="Photo Pending";
-desc.innerText="Photo under review.";
+text.innerText="Photo Under Review";
+desc.innerText="Image currently in moderation queue.";
 }
 }
 
@@ -259,15 +295,15 @@ const desc=document.getElementById("videoDesc");
 
 if(videoStatus==="pass"){
 text.innerText="Video Approved";
-desc.innerText="Video verified successfully.";
+desc.innerText="Video successfully meets verification compliance.";
 }
 else if(videoStatus==="fail"){
 text.innerText="Video Rejected";
-desc.innerText="Lighting or clarity insufficient.";
+desc.innerText="Video does not satisfy stability or duration criteria.";
 }
 else{
-text.innerText="Video Pending";
-desc.innerText="Video under review.";
+text.innerText="Video Under Review";
+desc.innerText="Video awaiting moderator confirmation.";
 }
 }
 
