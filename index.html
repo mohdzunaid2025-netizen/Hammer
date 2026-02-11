@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hammer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#eef5f4;
+  margin:0;
+  padding:20px;
+}
+.header{
+  font-size:22px;
+  font-weight:bold;
+}
+.sub{
+  color:gray;
+  margin-bottom:20px;
+}
+.card{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+button{
+  padding:10px 15px;
+  border:none;
+  border-radius:8px;
+  background:#2e7d32;
+  color:white;
+  font-weight:bold;
+}
+button.secondary{
+  background:#1565c0;
+}
+.hidden{
+  display:none;
+}
+.status{
+  font-weight:bold;
+  font-size:16px;
+}
+.footer{
+  text-align:center;
+  color:gray;
+  margin-top:30px;
+  font-size:13px;
+}
+</style>
+</head>
+<body>
+
+<div class="header" onclick="toggleAdmin()">Hammer</div>
+<div class="sub">Supervisor: <b>Zunaid</b></div>
+
+<div class="card">
+<h3>Initial Visual Assessment</h3>
+<p>Upload a clear, well-lit image for preliminary screening.</p>
+<input type="file" id="imageUpload" accept="image/*">
+<br><br>
+<button onclick="submitImage()">Upload Image</button>
+</div>
+
+<div class="card">
+<h3>Assessment Status</h3>
+<p id="statusText" class="status">Host pending</p>
+<p id="statusDesc">Your submission is under review.</p>
+</div>
+
+<div class="card hidden" id="videoSection">
+<h3>Secondary Verification</h3>
+<p>Upload verification video to proceed.</p>
+<input type="file" accept="video/*">
+<br><br>
+<button class="secondary">Submit Video</button>
+</div>
+
+<div class="card hidden" id="adminPanel">
+<h3>Internal Review Panel</h3>
+<button onclick="setStatus('pass')">Mark PASS</button>
+<button onclick="setStatus('fail')">Mark FAIL</button>
+<button onclick="setStatus('pending')">Mark PENDING</button>
+</div>
+
+<div class="footer">
+Hammer – Internal Assessment Interface v1.0
+</div>
+
+<script>
+let status = "pending";
+
+function submitImage(){
+  const file = document.getElementById("imageUpload").files[0];
+  if(!file){
+    alert("Please select an image first.");
+    return;
+  }
+  alert("Image uploaded for review.");
+  status = "pending";
+  updateStatus();
+}
+
+function setStatus(newStatus){
+  status = newStatus;
+  updateStatus();
+}
+
+function updateStatus(){
+  const text = document.getElementById("statusText");
+  const desc = document.getElementById("statusDesc");
+  const video = document.getElementById("videoSection");
+
+  if(status === "pass"){
+    text.innerText = "Host healthy, host good";
+    desc.innerText = "Visual indicators meet the expected baseline.";
+    video.classList.remove("hidden");
+  }
+  else if(status === "fail"){
+    text.innerText = "Host immature";
+    desc.innerText = "Visual indicators do not meet the required baseline.";
+    video.classList.add("hidden");
+  }
+  else{
+    text.innerText = "Host pending";
+    desc.innerText = "Your submission is under review.";
+    video.classList.add("hidden");
+  }
+}
+
+function toggleAdmin(){
+  document.getElementById("adminPanel").classList.toggle("hidden");
+}
+</script>
+
+</body>
+</html>
