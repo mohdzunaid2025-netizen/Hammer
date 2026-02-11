@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f2027">
 <title>Hammer</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -175,5 +176,10 @@ function toggleAdmin(){
 }
 </script>
 
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
 </body>
 </html>
