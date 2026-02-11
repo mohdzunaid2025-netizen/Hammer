@@ -3,160 +3,214 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hammer AI</title>
+<title>Hammer</title>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f2027">
+<meta name="theme-color" content="#111827">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
 
 body{
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+background:linear-gradient(160deg,#111827,#1f2937,#0f172a);
 min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:flex-start;
 padding:20px;
-color:white;
+color:#fff;
+}
+
+.app{
+width:100%;
+max-width:420px;
+background:#0f172a;
+border-radius:28px;
+padding:22px;
+box-shadow:0 20px 60px rgba(0,0,0,0.6);
 }
 
 .header{
-font-size:28px;
+font-size:24px;
 font-weight:700;
-margin-bottom:5px;
+margin-bottom:4px;
 }
 
 .sub{
-opacity:0.8;
-margin-bottom:25px;
+font-size:13px;
+opacity:0.6;
+margin-bottom:24px;
 cursor:pointer;
 }
 
-.card{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(15px);
-padding:25px;
+.section{
+background:#1e293b;
+padding:18px;
 border-radius:20px;
-margin-bottom:20px;
-border:1px solid rgba(255,255,255,0.15);
-box-shadow:0 10px 40px rgba(0,0,0,0.4);
-transition:0.3s;
+margin-bottom:18px;
 }
 
-.card:hover{transform:translateY(-4px);}
+.section h3{
+font-size:15px;
+margin-bottom:10px;
+font-weight:600;
+}
 
-h3{margin-bottom:10px;}
+.guide{
+font-size:13px;
+line-height:1.7;
+opacity:0.8;
+}
+
+input[type="file"]{
+width:100%;
+margin-top:12px;
+}
 
 button{
-margin-top:15px;
-padding:12px;
 width:100%;
+margin-top:14px;
+padding:12px;
 border:none;
-border-radius:12px;
-background:linear-gradient(90deg,#00f5ff,#00ff88);
+border-radius:14px;
+background:#2563eb;
+color:white;
 font-weight:600;
 cursor:pointer;
+transition:0.2s;
 }
 
-.hidden{display:none;}
+button:active{
+transform:scale(0.97);
+}
 
-.scan-bar{
-height:5px;
+.statusBox{
+text-align:center;
+font-size:18px;
+font-weight:600;
+margin-top:6px;
+}
+
+.statusDesc{
+font-size:13px;
+opacity:0.7;
+margin-top:4px;
+}
+
+.scan{
+margin-top:10px;
+height:4px;
 width:100%;
-background:rgba(255,255,255,0.1);
+background:#334155;
 border-radius:5px;
 overflow:hidden;
-margin-top:10px;
 }
 
-.scan-bar::after{
+.scan::after{
 content:"";
 display:block;
 height:100%;
 width:40%;
-background:linear-gradient(90deg,#00f5ff,#00ff88);
-animation:scan 1.2s linear infinite;
+background:#22d3ee;
+animation:move 1.2s linear infinite;
 }
 
-@keyframes scan{
+@keyframes move{
 0%{transform:translateX(-100%);}
-100%{transform:translateX(300%);}
+100%{transform:translateX(250%);}
 }
 
-footer{
+.hidden{
+display:none;
+}
+
+.admin{
+background:#111827;
+padding:15px;
+border-radius:18px;
+margin-top:10px;
+}
+
+.admin button{
+background:#334155;
+margin-top:8px;
+}
+
+.footer{
 text-align:center;
-margin-top:30px;
-opacity:0.6;
-font-size:13px;
+font-size:12px;
+opacity:0.4;
+margin-top:12px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">🔨 Hammer AI</div>
+<div class="app">
+
+<div class="header">Hammer</div>
 <div class="sub" onclick="toggleAdmin()">Supervisor: Zunaid</div>
 
-<div class="card">
-<h3>📹 Video Submission Guidelines</h3>
-<p style="font-size:14px;opacity:0.85;line-height:1.8;">
-• Ensure proper lighting (no shadows)<br>
-• Keep camera stable (no shaking)<br>
-• Face clearly visible<br>
-• Neutral background preferred<br>
-• Recommended duration: 5–15 seconds
-</p>
+<div class="section">
+<h3>Video Guidelines</h3>
+<div class="guide">
+✔ Use proper lighting<br>
+✔ Keep camera steady<br>
+✔ Face fully visible<br>
+✔ 5–15 seconds duration
+</div>
 </div>
 
-<div class="card">
-<h3>Video Verification</h3>
-
+<div class="section">
+<h3>Upload Verification Video</h3>
 <input type="file" id="videoUpload" accept="video/*">
-<button onclick="handleUpload()">Start AI Scan</button>
+<button onclick="startScan()">Start Verification</button>
 
-<div id="scanSection" class="hidden">
-<div class="scan-bar"></div>
-<p style="font-size:13px;opacity:0.8;margin-top:8px;">
-AI analyzing lighting, stability & frame clarity...
-</p>
+<div id="scanBar" class="scan hidden"></div>
 </div>
 
+<div class="section">
+<h3>Status</h3>
+<div id="statusText" class="statusBox">Host pending</div>
+<div id="statusDesc" class="statusDesc">Waiting for submission</div>
 </div>
 
-<div class="card">
-<h3>Assessment Status</h3>
-<div id="statusText" style="font-size:20px;font-weight:600;">Host pending</div>
-<div id="statusDesc" style="opacity:0.8;margin-top:6px;">
-Awaiting submission.
-</div>
-</div>
-
-<div class="card hidden" id="adminPanel">
-<h3>⚙ Admin Video Control</h3>
-<button onclick="setStatus('pass')">Approve Video</button>
+<div id="adminPanel" class="admin hidden">
+<button onclick="setStatus('pass')">Approve</button>
 <button onclick="setStatus('pending')">Set Pending</button>
-<button onclick="setStatus('fail')">Reject Video</button>
+<button onclick="setStatus('fail')">Reject</button>
 </div>
 
-<footer>Hammer AI v4.0 – Controlled Verification System</footer>
+<div class="footer">
+Hammer Secure System v5.0
+</div>
+
+</div>
 
 <script>
-
 let status="pending";
 
-function handleUpload(){
+function startScan(){
 const file=document.getElementById("videoUpload").files[0];
 if(!file){
 alert("Please select a video first.");
 return;
 }
 
-document.getElementById("scanSection").classList.remove("hidden");
+document.getElementById("scanBar").classList.remove("hidden");
 status="pending";
 updateStatus();
 
 setTimeout(()=>{
-document.getElementById("scanSection").classList.add("hidden");
+document.getElementById("scanBar").classList.add("hidden");
 },3000);
 }
 
@@ -170,16 +224,16 @@ const text=document.getElementById("statusText");
 const desc=document.getElementById("statusDesc");
 
 if(status==="pass"){
-text.innerText="Video Approved ✅";
-desc.innerText="Video meets lighting & stability standards.";
+text.innerText="Video Approved";
+desc.innerText="Video meets required standards.";
 }
 else if(status==="fail"){
-text.innerText="Video Rejected ❌";
-desc.innerText="Video quality insufficient. Please re-submit.";
+text.innerText="Video Rejected";
+desc.innerText="Lighting or clarity insufficient.";
 }
 else{
-text.innerText="Under Review ⏳";
-desc.innerText="Video currently under internal review.";
+text.innerText="Under Review";
+desc.innerText="Video under internal review.";
 }
 }
 
@@ -190,7 +244,6 @@ document.getElementById("adminPanel").classList.toggle("hidden");
 if ("serviceWorker" in navigator) {
 navigator.serviceWorker.register("sw.js");
 }
-
 </script>
 
 </body>
